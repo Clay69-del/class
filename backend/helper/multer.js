@@ -4,11 +4,16 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       return cb(null, "./uploads");
     },
-    filename: (req, file, cb) => {
-      const fileName = file?.originalname?.replace(/\s/g, "_");
-      cb(null, fileName);
-    },
-  });
+    
+const { v4: uuidv4 } = require('uuid'); 
+
+filename: (req, file, cb) => {
+    const ext = file.originalname.split('.').pop();
+    const base = file.originalname.replace(/\s/g, "_").replace(/\.[^/.]+$/, "");
+    const uniqueName = `${base}_${Date.now()}_${uuidv4()}.${ext}`;
+    cb(null, uniqueName);
+}
+
 
 var fileFilter = (req, file, callback) => {
     if (!file.originalname.match(/\.(pdf|epub|djvu|PFD|EPUB|DJVU|png)$/)) {
